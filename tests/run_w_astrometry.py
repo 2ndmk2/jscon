@@ -16,6 +16,9 @@ import os
 from jscon import make_image as mk
 from jscon import epsf_fit
 from jscon import astrometry
+from jscon import parameter_load
+
+arc_rad = 4.84814e-6
 
 
 def main_pool(i_core, time_arr, time_ref, df_astro, pixel_targets, hwmag_targets, gauss_conv,  xmin, xmax, ymin, ymax, mask, rand_nums, displace_amp = 3, out_folder ="./out/",  n_oversample = 2,  n_maxiter=5, pix_arcsec = 0.4):
@@ -43,8 +46,9 @@ def main_pool(i_core, time_arr, time_ref, df_astro, pixel_targets, hwmag_targets
         dy_arr.append(dy)
         out_file = os.path.join( out_folder , "displace_%.5f" % (time_arr[i_ter]))
         np.savez(out_file, dx = dx, dy = dy, displace= displace)
-        
+
     return dx_arr, dy_arr
+
 
 def pre_main(pixel_targets, hwmag_targets, gauss_conv,  xmin, xmax, ymin, ymax,  mask, displace_amp = 3, n_iter =2, out_folder ="./out/", n_oversample = 2, n_maxiter=5):
 
@@ -61,22 +65,22 @@ def pre_main(pixel_targets, hwmag_targets, gauss_conv,  xmin, xmax, ymin, ymax, 
     mask_new[mask] *= mask_bad
     return dx, dy, mask_new
 
-
 if __name__=="__main__":
 
     ## Input
-    n_core = 4
-    d = 0.34 ## m
-    lambda_now = 1.2 * 10**-6
-    arc_rad = 4.84814e-6
-    sigma_ace = 0.0
-    pix_arcsec = 0.4                    
-    time_ref = 2028
-    time_start = 2028
-    time_end = 2030
-    n_sample = 12
-    sky_dir_l = 359.85
-    sky_dir_b = 0.54    
+    dic_params = parameter_load.load_params("../params/para.dat")
+
+    n_core = dic_params["n_core"]
+    d = dic_params["d"] 
+    lambda_now = dic_params["lambda_now"]* 10**-6
+    sigma_ace = dic_params["sigma_ace"]
+    pix_arcsec = dic_params["pix_arcsec"]                  
+    time_ref = dic_params["time_ref"]   
+    time_start = dic_params["time_start"]  
+    time_end = dic_params["time_end"]  
+    time_sample_num = dic_params["time_sample_num"]  
+    sky_dir_l = dic_params["sky_dir_l"]
+    sky_dir_b = dic_params["sky_dir_b"]  
     xmin, xmax, ymin, ymax = 0, 1400, -100, 700
 
     out_folder ="../out/"
@@ -87,7 +91,7 @@ if __name__=="__main__":
     sigma_tot =np.sqrt( sigma_psf_arcsec_val**2 + sigma_ace**2)
     sigma_pix = sigma_tot/pix_arcsec #unit of pix
 
-    time_arr = np.linspace(time_start, time_end, n_sample)
+    time_arr = np.linspace(time_start, time_end, int(time_sample_num))
 
     ## Load catalog info
     df = mk.get_catalog_info("../data/ibnorth.csv")
