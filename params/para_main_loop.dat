@@ -1,7 +1,7 @@
 n_core 4
 diameter 0.34
 lambda_now 1.2
-sigma_ace 0.3
+sigma_ace 0.0
 pix_arcsec 0.4                    
 time_ref 2028
 time_start 2028
@@ -9,8 +9,5 @@ time_end 2030
 time_sample_num 12
 sky_dir_l 359.85
 sky_dir_b 0.54 
-xmax 1500
-ymax 800
-catalog ../data/ibnorth.csv
-out_folder ../out/
-ext_size 12
+xmax 1200
+ymax 600

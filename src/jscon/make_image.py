@@ -85,7 +85,7 @@ def create_wcs(skydir, coordsys='CEL', projection='TAN',
 
     return w
 
-def make_pixel_coordinates(gal_l, gal_b, sky_dir_l = 359.85, sky_dir_b = 0.54, pix_arcsec = 0.4):
+def make_pixel_coordinates(gal_l, gal_b, sky_dir_l = 359.85, sky_dir_b = 0.54, pix_arcsec = 0.4, x_offset = 50, y_offset = 50):
     """
     Params:
         gal_l: array for galactic longitude coordinate
@@ -100,7 +100,8 @@ def make_pixel_coordinates(gal_l, gal_b, sky_dir_l = 359.85, sky_dir_b = 0.54, p
     skydir =  SkyCoord(sky_dir_l* u.deg , sky_dir_b* u.deg, frame="galactic")
     wcs = create_wcs(skydir, "GAL", crpix = [0,0], cdelt = cdelt)
     pixel_targets = wcs.all_world2pix(gal_l, gal_b, 1)
-
+    pixel_targets[0] +=  x_offset 
+    pixel_targets[1] +=  y_offset 
     return pixel_targets
 
 def get_catalog_info(file_name):
@@ -119,8 +120,8 @@ def get_catalog_info(file_name):
     df["hwmag"] = hwmag 
     df = df[mask]
     return df
-def make_image(pixel_targets, hwmag_targets, gauss_conv, x_min=0, x_max=1400, y_min=-100, y_max =700):
-    """ Make image frame with size of (xmax - xmin, ymax - ymin) based on stellar inputs
+def make_image(pixel_targets, hwmag_targets, gauss_conv, x_max=1400, y_max =700, wd_margin = 30, wd_psf = 20):
+    """ Make image frame with size of (0:xmax, 0:ymax ) based on stellar inputs
 
     Params:
         pixel_targets: Array for stellar positions (2*N_star, unit of pix*pix)
@@ -133,29 +134,34 @@ def make_image(pixel_targets, hwmag_targets, gauss_conv, x_min=0, x_max=1400, y_
     Returns:
         image: 2d image
     """    
-    x_coord = np.arange(x_min, x_max)
-    y_coord  = np.arange(y_min, y_max)
+    x_coord = np.arange(x_max)
+    y_coord  = np.arange(y_max)
     x_id = np.arange(len(x_coord ))
     y_id = np.arange(len(y_coord ))
     image = np.zeros((len(x_coord ), len(y_coord )))
+    mask_included = []
 
     for i in(range(len(pixel_targets[0]))):
         x_cen = pixel_targets[0][i]
         y_cen =  pixel_targets[1][i]   
-        x_dif = np.abs(x_coord -x_cen)
-        y_dif = np.abs(y_coord -y_cen)
-        mask_x = x_dif<30
-        mask_y = y_dif<30
-        x_min_id = np.min(x_id[mask_x])
-        x_max_id = np.max(x_id[mask_x])
-        y_min_id = np.min(y_id[mask_y])
-        y_max_id = np.max(y_id[mask_y])
-        x_f = gauss_conv(x_dif[mask_x])
-        y_f = gauss_conv(y_dif[mask_y])
-        c =  20 * 10 ** (-0.4 * (hwmag_targets[i]-20)) * np.outer(x_f, y_f)
-        image[x_min_id:x_max_id+1, y_min_id:y_max_id+1] += c
-        image[x_min_id:x_max_id+1, y_min_id:y_max_id+1] += c
+        if  wd_margin < x_cen and x_cen < x_max-  wd_margin and wd_margin < y_cen and y_cen < y_max - wd_margin:
+            x_dif = np.abs(x_coord -x_cen)
+            y_dif = np.abs(y_coord -y_cen)
+            mask_x = x_dif< wd_psf 
+            mask_y = y_dif< wd_psf 
+            x_min_id = np.min(x_id[mask_x])
+            x_max_id = np.max(x_id[mask_x])
+            y_min_id = np.min(y_id[mask_y])
+            y_max_id = np.max(y_id[mask_y])
+            x_f = gauss_conv(x_dif[mask_x])
+            y_f = gauss_conv(y_dif[mask_y])
+            c =  20 * 10 ** (-0.4 * (hwmag_targets[i]-20)) * np.outer(x_f, y_f)
+            image[x_min_id:x_max_id+1, y_min_id:y_max_id+1] += c
+            mask_included.append(True)
+        else:
+            mask_included.append(False)
+    mask_included = np.array(mask_included)
     image = image.T
-    return image
+    return image, mask_included 
 
 

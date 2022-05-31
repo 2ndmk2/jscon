@@ -14,22 +14,10 @@ from photutils.detection import find_peaks
 from photutils.psf import EPSFBuilder, extract_stars
 
 
-def main(image, x_target, y_target, lim_vals, mask_size= 25, ext_size= 9, n_oversample = 2, n_maxiter=10, norm_radius = 5.5, recentering_boxsize =7):
-
-    x_min, x_max, y_min, y_max = lim_vals[0], lim_vals[1], lim_vals[2], lim_vals[3]
-    x_target_plate = x_target- x_min
-    y_target_plate = y_target- y_min
-
-    mask_size = 25
-    hsize = (mask_size - 1) / 2
-
-
-    mask_region = ((x_target_plate > hsize) & (x_target_plate < (image.shape[1] -1 - hsize)) & (y_target_plate > hsize) & (y_target_plate < (image.shape[0] -1 - hsize)))
-    x_select = x_target_plate[mask_region]
-    y_select = y_target_plate[mask_region]
+def main(image, x_select, y_select,  ext_size= 25, n_oversample = 2, n_maxiter=10, norm_radius = 5.5, recentering_boxsize =7):
 
     stars_tbl = Table()
-    stars_tbl['x'] = x_select
+    stars_tbl['x'] = x_select 
     stars_tbl['y'] = y_select
 
     mean_val, median_val, std_val = sigma_clipped_stats(image, sigma=2.)  
@@ -50,5 +38,7 @@ def main(image, x_target, y_target, lim_vals, mask_size= 25, ext_size= 9, n_over
     pos_stars = fitted_stars.center_flat
     dx= pos_stars[:,0] - x_select
     dy= pos_stars[:,1] - y_select  
-    return dx, dy  
+    #plt.imshow(np.log10(epsf.data))
+    #plt.show()
+    return dx, dy, epsf.data
 

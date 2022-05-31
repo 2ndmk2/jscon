@@ -4,5 +4,8 @@ def load_params(file):
     dic = {}
     for line in lines:
         itemList = line.split()
-        dic[itemList[0]] = float(itemList[1])
+        try:
+            dic[itemList[0]] = float(itemList[1])
+        except:
+            dic[itemList[0]] = str(itemList[1])
     return dic
