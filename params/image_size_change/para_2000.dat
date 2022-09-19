@@ -1,0 +1,16 @@
+n_core 7 
+diameter 0.34 
+lambda_now 1.2 
+sigma_ace 0.3 
+pix_arcsec 0.5 
+time_ref 2028.0 
+time_start 2028.0 
+time_end 2028.001 
+time_sample_num 400 
+sky_dir_l 179.85 
+sky_dir_b 0.54 
+xmax 2000 
+ymax 1200 
+catalog ../data/new_stellar_catalog.csv 
+out_folder /home/aizwms/jasmine/jasmin_git/jscon/result/image_size_change/out_2000 
+ext_size 12.0 
