@@ -10,6 +10,9 @@ import numpy as np
 import astropy.units as u
 import scipy.integrate as integrate
 from scipy import interpolate
+
+arc_rad = 4.84814e-6
+
 def gaussian_1d(x, sigma_x):
     """1d gaussian function
 
@@ -94,7 +97,7 @@ def make_pixel_coordinates(gal_l, gal_b, sky_dir_l = 359.85, sky_dir_b = 0.54, p
         skydir_b: Sky position for galactic latitude coordinate at (0pix, 0pix)
 
     """
-
+    
     arcsec_deg =  0.00027777777777778 ##deg to radian
     cdelt =[pix_arcsec * arcsec_deg, pix_arcsec * arcsec_deg]
     skydir =  SkyCoord(sky_dir_l* u.deg , sky_dir_b* u.deg, frame="galactic")
@@ -104,7 +107,7 @@ def make_pixel_coordinates(gal_l, gal_b, sky_dir_l = 359.85, sky_dir_b = 0.54, p
     pixel_targets[1] +=  y_offset 
     return pixel_targets
 
-def get_catalog_info(file_name):
+def get_catalog_info_for_making_stars(file_name):
 
     """ Get dataframe from file with name of "file_name". We only take stars with J & H mag available
 
@@ -120,6 +123,59 @@ def get_catalog_info(file_name):
     df["hwmag"] = hwmag 
     df = df[mask]
     return df
+
+def get_catalog_info(file_name):
+
+    """ Get dataframe from file with name of "file_name". We only take stars with J & H mag available
+
+    Params:
+        file_name: file_name for csv file
+    Returns:
+        df: data
+    """    
+
+    df= pd.read_csv(file_name)
+    #mask = (df["Hmag"] < 30) *  (df["Jmag"] < 30)
+    #hwmag = 0.7829 * df["Jmag"] + 0.2171 * df["Hmag"] -0.0323* (df["Jmag"] -df["Hmag"])**2    
+    #df["hwmag"] = hwmag 
+    #df = df[mask]
+    return df
+
+def compute_espf_for_gaussian_psf(sigma_pix, width=100, N_width=10000):
+    """ Construct epsf for 1d gaussian psf
+    
+    Params:
+        sigma_pix: std for beam in unit of pix
+        width: The psf is constructed on "" -width [pix] < x < width [pix], -width [pix] < y < width [pix] "" 
+        N_width: -width [pix] < x < width [pix] is divided into N_width sections
+    Returns:
+        sigma_pix: combined std for beam 
+    """            
+    x_cen_arr = np.linspace(-width, width, N_width)
+    y_val_arr = []
+    for x_cen in x_cen_arr:
+        val = pixel_1d_gaussian(x_cen, .5, sigma_pix)
+        y_val_arr.append(val)
+    gauss_conv = interpolate.interp1d(x_cen_arr,  y_val_arr)
+    return gauss_conv
+    
+def compute_sigma(lambda_now, diameter, sigma_ace, pix_arcsec):
+    """ Compute sigma for beam based on psf width (Airy function) and ace variance. 
+
+    Params:
+        lambda_now: wavelength (m)
+        diameter: telescope diameter (m)
+        pix_arcsec: pixscale in unit of arcsec (arcsec)
+    Returns:
+        sigma_pix: combined std for beam (pix)
+    """        
+    sigma_psf_arcsec_val = (0.512/1.177410) *(lambda_now/diameter )/arc_rad
+    sigma_tot =np.sqrt( sigma_psf_arcsec_val**2 + sigma_ace**2)
+    sigma_pix = sigma_tot/pix_arcsec #unit of pix
+    
+    return sigma_pix
+
+
 def make_image(pixel_targets, hwmag_targets, gauss_conv, x_max=1400, y_max =700, wd_margin = 30, wd_psf = 20):
     """ Make image frame with size of (0:xmax, 0:ymax ) based on stellar inputs
 

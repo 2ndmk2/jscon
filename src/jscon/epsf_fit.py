@@ -51,7 +51,7 @@ def main(image, x_select, y_select,  ext_size= 25, n_oversample = 2, n_maxiter=1
                                    maxiters=n_maxiter, progress_bar=False,
                                    norm_radius=norm_radius, recentering_boxsize=recentering_boxsize,
                                    center_accuracy=0.0001)
-
+    
     epsf, fitted_stars = epsf_builder(stars)
     pos_stars = fitted_stars.center_flat
     dx= pos_stars[:,0] - x_select

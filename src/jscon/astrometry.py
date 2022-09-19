@@ -44,7 +44,6 @@ def compute_delta_ra_dec_one_phase(ra, dec, pm_ra, pm_dec, distance, time_now, t
         dec_delta: Shift in dec direction for objects (mas)
 
     """
-
     
     time_delta = time_now - time_origin
     bs = barycentricPosition(time_now)
