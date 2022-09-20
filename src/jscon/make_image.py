@@ -124,6 +124,19 @@ def get_catalog_info_for_making_stars(file_name):
     df = df[mask]
     return df
 
+def get_gal_l_gal_b_hwmag(df, mag_lim = 14.5, minus_l = True):
+    mask_hwmag = df["hwmag"] <  mag_lim
+    hwmag_targets = df["hwmag"] 
+    c = SkyCoord(df["ra"].values, df["dec"].values, frame="icrs", unit="deg")
+    if minus_l:
+        gal_l = c.galactic.l.deg -180
+    else:
+        gal_l = c.galactic.l.deg 
+    gal_b = c.galactic.b.deg
+    hwmag = df["hwmag"]
+    return gal_l, gal_b, hwmag, hwmag_targets
+
+
 def get_catalog_info(file_name):
 
     """ Get dataframe from file with name of "file_name". We only take stars with J & H mag available
