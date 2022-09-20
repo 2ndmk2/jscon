@@ -10,7 +10,7 @@ For normal install,
 For developers, 
 
 * python setup.py develop
-*  *For conda/pip env*, go to parental directory of tesarot, and "pip install -e ./jscon"
+*  *For conda/pip env*, go to parental directory of jscon, and "pip install -e ./jscon"
 
 ## Test run
 Go to ipynb & tests folder
