@@ -19,3 +19,7 @@ Go to ipynb & tests folder
   2. Run `make_random_stars.ipynb` or `make_random_stars.py` to make random stars.  
      You must set `file_random_stars` to path of catalog.   
   3. After runnning `make_random_stars.py`, you can also make image for random stars using `test_make_image.py`
+
+### Merge GNS catalog & Jasmine catalog. GNS catalog misses some bright stars
+  1. Go to `tests/merge_catalog`
+  2. Run `merge_catalog.py`
