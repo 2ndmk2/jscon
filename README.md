@@ -14,4 +14,4 @@ For developers,
 
 ## Test run
 Go to ipynb & tests folder
-
+- To make random stars
