@@ -15,7 +15,8 @@ catalog_shifted = catalog
 mask_shifted = catalog_shifted["gal_l"]>180
 catalog_shifted["gal_l"][mask_shifted] -=360
 
-# Stellar distribution use for makeing random stars
+# A set of stars to produce random stars
+# Stars in (l_min_choose, l_max_choose) & (b_min_choose, b_max_choose) are taken. 
 l_min_choose = 0.18
 l_max_choose = 0.24
 b_min_choose = 0.15
