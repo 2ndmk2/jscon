@@ -14,7 +14,7 @@ For developers,
 
 ## Test run
 Go to ipynb & tests folder
-### To make random stars*  
+### To make random stars 
   1. Go to tests/make_random_stars/  
   2. Run make_random_stars.ipynb or make_random_stars.py to make random stars.  
      You must set file_random_stars' to path of catalog.   
