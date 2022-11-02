@@ -123,12 +123,7 @@ def make_pixel_coordinates(gal_l,
     pixel_targets[1] += y_offset
     return pixel_targets
 
-<<<<<<< HEAD
 
-
-def get_catalog_info_for_making_stars(file_name):
-=======
->>>>>>> origin/develop
 
 def get_catalog_info_for_making_stars(file_name):
     """ Get dataframe from file with name of "file_name". We only take stars with J & H mag available
@@ -139,7 +134,6 @@ def get_catalog_info_for_making_stars(file_name):
         df: data
     """
 
-<<<<<<< HEAD
     df= pd.read_csv(file_name)
     mask = (df["Hmag"] < 30) *  (df["Jmag"] < 30)
     hwmag = 0.7829 * df["Jmag"] + 0.2171 * df["Hmag"] -0.0323* (df["Jmag"] -df["Hmag"])**2  
@@ -154,20 +148,6 @@ def get_catalog_info_for_making_stars(file_name):
 
 def get_gal_l_gal_b_hwmag(df, mag_lim = 14.5, minus_l = True):
     hwmag_targets = df["hwmag"] 
-=======
-    df = pd.read_csv(file_name)
-    mask = (df["Hmag"] < 30) * (df["Jmag"] < 30)
-    hwmag = 0.7829 * df["Jmag"] + 0.2171 * df["Hmag"] - 0.0323 * (
-        df["Jmag"] - df["Hmag"])**2
-    df["hwmag"] = hwmag
-    df = df[mask]
-    return df
-
-
-def get_gal_l_gal_b_hwmag(df, mag_lim=14.5, minus_l=True):
-    mask_hwmag = df["hwmag"] < mag_lim
-    hwmag_targets = df["hwmag"]
->>>>>>> origin/develop
     c = SkyCoord(df["ra"].values, df["dec"].values, frame="icrs", unit="deg")
     if minus_l:
         gal_l = c.galactic.l.deg - 180
