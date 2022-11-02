@@ -1,4 +1,5 @@
 .DS_Store
+<<<<<<< HEAD
 .gitignore
 README.md
 setup.py
@@ -68,6 +69,11 @@ params/pixel_change/para_0.7.dat
 params/pixel_change/para_0.8.dat
 params/pixel_change/para_0.9.dat
 params/pixel_change/para_1.0.dat
+=======
+MANIFEST.in
+README.md
+setup.py
+>>>>>>> origin/develop
 src/.DS_Store
 src/jscon/__init__.py
 src/jscon/analyze_result.py
@@ -84,11 +90,16 @@ src/jscon.egg-info/dependency_links.txt
 src/jscon.egg-info/not-zip-safe
 src/jscon.egg-info/requires.txt
 src/jscon.egg-info/top_level.txt
+<<<<<<< HEAD
 src/jscon/__pycache__/__init__.cpython-38.pyc
 src/jscon/__pycache__/astrometry.cpython-38.pyc
 src/jscon/__pycache__/epsf_fit.cpython-38.pyc
 src/jscon/__pycache__/make_image.cpython-38.pyc
 src/jscon/__pycache__/parameter_load.cpython-38.pyc
+=======
+src/jscon/data/__init__.py
+src/jscon/data/ibnorth.csv
+>>>>>>> origin/develop
 tests/.DS_Store
 tests/run.py
 tests/run_w_astrometry.py

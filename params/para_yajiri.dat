@@ -11,6 +11,6 @@ sky_dir_l 359.85
 sky_dir_b 0.54 
 xmax 1500
 ymax 800
-catalog ../data/ibnorth.csv
+catalog ibnorth.csv
 out_folder ../out/
 ext_size 12
