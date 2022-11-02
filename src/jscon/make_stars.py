@@ -59,7 +59,7 @@ def make_new_stars( gal_l_catalog, gal_b_catalog ,hwmag_catalog, gal_l_min, gal_
     c_new = SkyCoord(l_sample, b_sample, frame="galactic", unit="deg")
     ra_new = c_new.icrs.ra.deg
     dec_new = c_new.icrs.dec.deg
-
+    
     c = SkyCoord(ra_new, dec_new, frame="icrs", unit="deg")
     gal_l = c.galactic.l.deg
     gal_b = c.galactic.b.deg       
@@ -69,5 +69,5 @@ def make_new_stars( gal_l_catalog, gal_b_catalog ,hwmag_catalog, gal_l_min, gal_
     dic_new["hwmag"] = hwmag_sample
     dic_new["gal_l"] = gal_l
     dic_new["gal_b"] = gal_b
-
+    dic_new = pd.DataFrame(dic_new)
     return dic_new
